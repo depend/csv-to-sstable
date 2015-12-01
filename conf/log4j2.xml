@@ -12,19 +12,11 @@
         <Console name="Console">
             <PatternLayout pattern="${patternLayout}"/>
         </Console>
-        <RollingFile name="File" fileName="${filename}" filePattern="${filePattern}" append="true">
-            <PatternLayout pattern="${patternLayout}"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="16 MB"/>
-            </Policies>
-            <DefaultRolloverStrategy fileIndex="min" max="16"/>
-        </RollingFile>
     </Appenders>
 
     <Loggers>
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="File"/>
         </Root>
         <logger name="org.apache.cassandra" level="WARN"/>
         <logger name="org.cassandraunit" level="WARN"/>
