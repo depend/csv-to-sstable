@@ -63,7 +63,7 @@ public class Launcher {
 
         try (
                 BufferedReader reader = new BufferedReader(new FileReader(csvFile));
-                CsvListReader csvReader = new CsvListReader(reader, SINGLE_QUOTED_COMMA_DELIMITED)) {
+                CsvListReader csvReader = new CsvListReader(reader, CsvPreference.EXCEL_PREFERENCE)) {
 
             String[] header = csvReader.getHeader(true);
 
@@ -91,7 +91,12 @@ public class Launcher {
             while ((line = csvReader.read()) != null) {
                 Map<String, Object> row = new HashMap<>();
                 for (int i = 0; i < header.length; i++) {
-                    row.put(header[i], Bulkload.parse(line.get(i), columns.get(header[i]), primaryColumns.contains(header[i])));
+                    try {
+                        row.put(header[i], Bulkload.parse(line.get(i), columns.get(header[i]), primaryColumns.contains(header[i])));
+                    } catch (Exception e) {
+                        logger.error("fail to parse {}, index: {}, type: {}, value: {}. {}", header[i], i, columns.get(header[i]), line.get(i));
+                        throw e;
+                    }
                 }
                 writer.addRow(row);
             }
