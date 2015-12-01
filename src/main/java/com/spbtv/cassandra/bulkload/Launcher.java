@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.prefs.CsvPreference;
 
+import java.util.Map;
+
 /**
  * Created by depend on 12/1/2015.
  */
@@ -24,7 +26,9 @@ public class Launcher {
 
 
         String schema = CassandraSchemaHelper.getSchema(host, username, password, keyspace, table);
-
         logger.info(schema);
+
+        Map<String, String> columns = CassandraSchemaHelper.extractColumns(schema.replace("\n", " ").replace("\r", " "));
+        logger.info("{} columns", columns.size());
     }
 }
