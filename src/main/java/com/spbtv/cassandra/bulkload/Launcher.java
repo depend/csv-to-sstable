@@ -32,7 +32,7 @@ public class Launcher {
     private static final CsvPreference SINGLE_QUOTED_COMMA_DELIMITED = new CsvPreference.Builder(
             '\'', ',', "\n").build();
 
-    private static void parse(File csvFile) {
+    private static void parse(File csvFile) throws IOException, InvalidRequestException {
         String host = Env.getCassandraHost();
         String username = Env.getCassandraUsername();
         String password = Env.getCassandraPassword();
@@ -98,11 +98,7 @@ public class Launcher {
 
             writer.close();
 
-        } catch (InvalidRequestException | IOException e) {
-            e.printStackTrace();
         }
-
-        System.out.println("Done.");
     }
 
     private static Path createTmpDir() throws IOException {
@@ -119,7 +115,7 @@ public class Launcher {
         FileUtils.moveFileToDirectory(zipFile, moveTarget.toFile(), true);
     }
 
-    private static void processZip(File zipFile) throws IOException {
+    private static void processZip(File zipFile) throws IOException, InvalidRequestException {
         if (zipFile.isDirectory()) {
             return;
         }
@@ -150,6 +146,7 @@ public class Launcher {
             for (File f : zipPath.listFiles()) {
                 processZip(f);
             }
+            logger.info("Done.");
         } catch (Exception e) {
             logger.error("fail to load.", e);
         }
