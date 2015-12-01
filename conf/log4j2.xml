@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Filter type="ThresholdFilter" level="debug"/>
+    <Properties>
+        <Property name="app_name">datasvc</Property>
+        <Property name="filename">/log/${app_name}.log</Property>
+        <Property name="filePattern">/log/${app_name}-%i.log</Property>
+        <Property name="patternLayout">[%d{dd MMM yyyy HH:mm:ss,SSS}][%t][%-5p][%c] - %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console">
+            <PatternLayout pattern="${patternLayout}"/>
+        </Console>
+        <RollingFile name="File" fileName="${filename}" filePattern="${filePattern}" append="true">
+            <PatternLayout pattern="${patternLayout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="16 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="min" max="16"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+        <logger name="org.apache.cassandra" level="WARN"/>
+        <logger name="org.cassandraunit" level="WARN"/>
+        <logger name="com.datastax" level="WARN"/>
+        <logger name="io.netty" level="WARN"/>
+        <logger name="io.grpc" level="WARN"/>
+    </Loggers>
+
+</Configuration>

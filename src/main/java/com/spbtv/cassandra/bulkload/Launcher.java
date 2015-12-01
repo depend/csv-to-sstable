@@ -14,11 +14,17 @@ public class Launcher {
             '\'', ',', "\n").build();
 
     public static void main(String[] args) {
+        String host = Env.getCassandraHost();
+        String username = Env.getCassandraUsername();
+        String password = Env.getCassandraPassword();
         String keyspace = Env.getTargetKeyspace();
         String table = Env.getTargetTable();
         String csv_path = Env.getImportInputPath();
         String output_path = Env.getImportOutputPath();
 
 
+        String schema = CassandraSchemaHelper.getSchema(host, username, password, keyspace, table);
+
+        logger.info(schema);
     }
 }
