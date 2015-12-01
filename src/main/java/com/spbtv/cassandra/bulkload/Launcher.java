@@ -24,11 +24,12 @@ public class Launcher {
         String csv_path = Env.getImportInputPath();
         String output_path = Env.getImportOutputPath();
 
-
-        String schema = CassandraSchemaHelper.getSchema(host, username, password, keyspace, table);
+        String schema = Bulkload.getSchema(host, username, password, keyspace, table);
         logger.info(schema);
 
-        Map<String, String> columns = CassandraSchemaHelper.extractColumns(schema.replace("\n", " ").replace("\r", " "));
+        Map<String, String> columns = Bulkload.extractColumns(schema.replace("\n", " ").replace("\r", " "));
         logger.info("{} columns", columns.size());
+
+        //Set<String> primaryColumns = extractPrimaryColumns(schema);
     }
 }
