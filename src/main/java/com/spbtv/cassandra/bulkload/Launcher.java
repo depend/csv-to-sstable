@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.supercsv.prefs.CsvPreference;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by depend on 12/1/2015.
@@ -27,9 +28,11 @@ public class Launcher {
         String schema = Bulkload.getSchema(host, username, password, keyspace, table);
         logger.info(schema);
 
-        Map<String, String> columns = Bulkload.extractColumns(schema.replace("\n", " ").replace("\r", " "));
+        schema = schema.replace("\n", " ").replace("\r", " ");
+        Map<String, String> columns = Bulkload.extractColumns(schema);
         logger.info("{} columns", columns.size());
 
-        //Set<String> primaryColumns = extractPrimaryColumns(schema);
+        Set<String> primaryColumns = Bulkload.extractPrimaryColumns(schema);
+        logger.info("{} primary keys", primaryColumns.size());
     }
 }

@@ -75,7 +75,7 @@ public class Bulkload {
 		return cols;
 	}
 
-	private static Set<String> extractPrimaryColumns(String schema)
+	public static Set<String> extractPrimaryColumns(String schema)
 	{
 		Set<String> primary = new HashSet<>();
 		
