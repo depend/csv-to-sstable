@@ -1,10 +1,12 @@
 package com.spbtv.cassandra.bulkload;
 
 import com.google.common.base.Joiner;
+import com.qsystem.common.util.UnZipHelper;
 import org.apache.cassandra.config.Config;
 import org.apache.cassandra.dht.Murmur3Partitioner;
 import org.apache.cassandra.exceptions.InvalidRequestException;
 import org.apache.cassandra.io.sstable.CQLSSTableWriter;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvListReader;
@@ -14,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +105,53 @@ public class Launcher {
         System.out.println("Done.");
     }
 
+    private static Path createTmpDir() throws IOException {
+        String tmpRoot = System.getProperty("java.io.tmpdir");
+        File dir = File.createTempFile("option", "", new File(tmpRoot));
+        dir.delete();
+        dir.mkdir();
+        return dir.toPath();
+    }
+
+    private static void archive(File zipFile) throws IOException {
+        logger.info("archiving {}", zipFile);
+        Path moveTarget = Paths.get(Env.getImportInputPath(), "processed");
+        FileUtils.moveFileToDirectory(zipFile, moveTarget.toFile(), true);
+    }
+
+    private static void processZip(File zipFile) throws IOException {
+        if (zipFile.isDirectory()) {
+            return;
+        }
+
+        Path unzipPath = createTmpDir();
+
+        try {
+            logger.info("unzip {}", zipFile);
+            UnZipHelper.unZip(zipFile.toPath(), unzipPath);
+            for (File f : unzipPath.toFile().listFiles()) {
+                parse(f);
+            }
+
+            archive(zipFile);
+            logger.info("finish processing {}", zipFile);
+        } finally {
+            logger.info("cleanup unzip folder {} ...", unzipPath);
+            FileUtils.deleteDirectory(unzipPath.toFile());
+        }
+
+    }
+
     public static void main(String[] args) {
-        String input_path = Env.getImportInputPath();
+        try {
+            String input_path = Env.getImportInputPath();
+            File zipPath = new File(input_path);
+
+            for (File f : zipPath.listFiles()) {
+                processZip(f);
+            }
+        } catch (Exception e) {
+            logger.error("fail to load.", e);
+        }
     }
 }
