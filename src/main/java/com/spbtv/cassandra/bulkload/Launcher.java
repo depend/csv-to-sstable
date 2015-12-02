@@ -98,7 +98,14 @@ public class Launcher {
                         throw e;
                     }
                 }
-                writer.addRow(row);
+                try {
+                    writer.addRow(row);
+                } catch (Exception e) {
+                    logger.error("fail to add row.", e);
+                    logger.error("row: {}", Joiner.on(", ").join(line));
+                    throw e;
+                }
+
             }
 
             writer.close();
