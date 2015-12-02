@@ -22,7 +22,7 @@
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="com.spbtv.cassandra.bulkload.Launcher" level="WARN">
+        <logger name="com.spbtv.cassandra.bulkload.Launcher" level="INFO">
             <AppenderRef ref="File"/>
         </logger>
         <logger name="org.apache.cassandra" level="WARN"/>

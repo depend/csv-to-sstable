@@ -92,7 +92,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.spbtv.cassandra.bulkload.Bulkload</mainClass>
+                            <mainClass>com.spbtv.cassandra.bulkload.Launcher</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
