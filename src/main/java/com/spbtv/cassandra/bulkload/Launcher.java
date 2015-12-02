@@ -101,9 +101,8 @@ public class Launcher {
                 try {
                     writer.addRow(row);
                 } catch (Exception e) {
-                    logger.error("fail to add row.", e);
-                    logger.error("row: {}", Joiner.on(", ").join(line));
-                    throw e;
+                    logger.warn("fail to add row.", e);
+                    logger.warn("row: {}", Joiner.on(", ").useForNull("NULL").join(line));
                 }
 
             }

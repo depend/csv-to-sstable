@@ -2,9 +2,6 @@
 <Configuration>
     <Filter type="ThresholdFilter" level="debug"/>
     <Properties>
-        <Property name="app_name">datasvc</Property>
-        <Property name="filename">/log/${app_name}.log</Property>
-        <Property name="filePattern">/log/${app_name}-%i.log</Property>
         <Property name="patternLayout">[%d{dd MMM yyyy HH:mm:ss,SSS}][%t][%-5p][%c] - %m%n</Property>
     </Properties>
 
@@ -12,17 +9,26 @@
         <Console name="Console">
             <PatternLayout pattern="${patternLayout}"/>
         </Console>
+        <RollingFile name="File" fileName="/log/csv-to-sstable.log" filePattern="/log/csv-to-sstable-%i.log" append="true">
+            <PatternLayout pattern="%m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="16 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy fileIndex="min" max="16"/>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>
         </Root>
+        <logger name="com.spbtv.cassandra.bulkload.Launcher" level="WARN">
+            <AppenderRef ref="File"/>
+        </logger>
         <logger name="org.apache.cassandra" level="WARN"/>
         <logger name="org.cassandraunit" level="WARN"/>
         <logger name="com.datastax" level="WARN"/>
         <logger name="io.netty" level="WARN"/>
-        <logger name="io.grpc" level="WARN"/>
     </Loggers>
 
 </Configuration>
