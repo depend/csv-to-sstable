@@ -70,7 +70,7 @@ public class Bulkload {
             for (String col : m.group(1).split(",")) {
                 String[] name_type_prim = col.trim().split("\\s+");
                 if (name_type_prim.length <= 4 && !name_type_prim[0].toUpperCase().equals("PRIMARY"))
-                    cols.put(name_type_prim[0], name_type_prim[1]);
+                    cols.put(name_type_prim[0].toLowerCase(), name_type_prim[1]);
             }
 
         } else throw new RuntimeException("Could not extract columns from provided schema.");
@@ -84,7 +84,7 @@ public class Bulkload {
         Pattern pattern = Pattern.compile(".*?(\\w+)\\s+\\w+\\s+PRIMARY KEY.*");
         Matcher m = pattern.matcher(schema);
         if (m.matches()) {
-            primary.add(m.group(1));
+            primary.add(m.group(1).toLowerCase());
             return primary;
         }
 
@@ -93,7 +93,7 @@ public class Bulkload {
         m = pattern.matcher(schema);
         if (m.matches()) {
             for (String col : m.group(1).split(",")) {
-                primary.add(col.trim());
+                primary.add(col.trim().toLowerCase());
             }
             return primary;
         }
@@ -102,7 +102,7 @@ public class Bulkload {
         pattern = Pattern.compile(".*PRIMARY KEY\\s*\\(\\s*\\(?\\s*(\\w+)\\s*\\)?,?.*\\).*");
         m = pattern.matcher(schema);
         if (m.matches()) {
-            primary.add(m.group(1));
+            primary.add(m.group(1).toLowerCase());
             return primary;
         }
 

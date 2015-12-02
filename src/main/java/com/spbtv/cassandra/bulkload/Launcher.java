@@ -91,10 +91,11 @@ public class Launcher {
             while ((line = csvReader.read()) != null) {
                 Map<String, Object> row = new HashMap<>();
                 for (int i = 0; i < header.length; i++) {
+                    String hdr = header[i].toLowerCase();
                     try {
-                        row.put(header[i], Bulkload.parse(line.get(i), columns.get(header[i]), primaryColumns.contains(header[i])));
+                        row.put(hdr, Bulkload.parse(line.get(i), columns.get(hdr), primaryColumns.contains(hdr)));
                     } catch (Exception e) {
-                        logger.error("fail to parse {}, index: {}, type: {}, value: {}. {}", header[i], i, columns.get(header[i]), line.get(i));
+                        logger.error("fail to parse {}, index: {}, type: {}, value: {}. {}", hdr, i, columns.get(hdr), line.get(i));
                         throw e;
                     }
                 }
