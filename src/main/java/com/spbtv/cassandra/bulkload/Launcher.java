@@ -101,7 +101,7 @@ public class Launcher {
                 }
                 try {
                     writer.addRow(row);
-                } catch (Exception e) {
+                } catch (InvalidRequestException e) {
                     logger.warn("fail to add row.", e);
                     logger.warn("row: {}", Joiner.on(", ").useForNull("NULL").join(line));
                 }
