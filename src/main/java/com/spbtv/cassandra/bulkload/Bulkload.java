@@ -52,7 +52,7 @@ public class Bulkload {
         Cluster.Builder builder = Cluster.builder()
                 .withCredentials(username, password);
 
-        String[] hosts = host.split(";");
+        String[] hosts = host.split(",");
         for (String h : hosts) {
             builder.addContactPoint(h);
         }
@@ -123,7 +123,11 @@ public class Bulkload {
         try {
             return Long.parseLong(value);
         } catch (Exception e) {
-            return TimestampHelper.dateStringToLong(value, "MM/dd/yyyy", DateTimeZone.UTC);
+            try {
+                return TimestampHelper.dateStringToLong(value, "MM/dd/yyyy", DateTimeZone.UTC);
+            } catch (Exception e1) {
+                return TimestampHelper.dateStringToLong(value, "yyyy-MM-dd", DateTimeZone.UTC);
+            }
         }
     }
 
