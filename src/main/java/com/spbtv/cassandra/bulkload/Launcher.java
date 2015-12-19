@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -124,7 +125,17 @@ public class Launcher {
     private static void archive(File zipFile) throws IOException {
         logger.info("archiving {}", zipFile);
         Path moveTarget = Paths.get(Env.getImportInputPath(), "processed");
-        FileUtils.moveFileToDirectory(zipFile, moveTarget.toFile(), true);
+        File target = new File(moveTarget.toFile(), zipFile.getName());
+
+        logger.info("move to {}", target.toPath());
+        if (!Files.exists(target.toPath()))
+            FileUtils.moveFileToDirectory(zipFile, moveTarget.toFile(), true);
+        else {
+            logger.info("target exists.");
+            for (File f : moveTarget.toFile().listFiles()) {
+                logger.info("{}", f.getPath());
+            }
+        }
     }
 
     private static void processZip(File zipFile) throws IOException, InvalidRequestException {
@@ -147,7 +158,6 @@ public class Launcher {
             logger.info("cleanup unzip folder {} ...", unzipPath);
             FileUtils.deleteDirectory(unzipPath.toFile());
         }
-
     }
 
     public static void main(String[] args) {
